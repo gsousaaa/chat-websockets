@@ -6,8 +6,10 @@ dotenv.config()
 
 const server = express()
 
-server.use(express.static(path.join(__dirname, 'public')))
+server.use(express.static(path.join(__dirname, '../public')))
 
 server.listen(process.env.PORT, ()=> {
     console.log(`server rodando na porta ${process.env.PORT}`)
 })
+
+
