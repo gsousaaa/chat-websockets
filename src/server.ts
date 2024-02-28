@@ -3,7 +3,6 @@ import path from "path";
 import dotenv from 'dotenv';
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { Socket } from "dgram";
 
 declare module 'socket.io' {
     interface Socket {

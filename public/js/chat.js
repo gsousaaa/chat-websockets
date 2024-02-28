@@ -88,18 +88,22 @@ socket.on('disconnect', () => {
     userList = []
     renderUserList(userList)
     isConnected = false
+
+    // join-request para reconexão
+    if (!isConnected) {
+        socket.on('connect', () => {
+            isConnected = true
+            if(username !== '') {
+                socket.emit('join-request', username)
+            }
+        })
+    }
+  
 })
 
 socket.on('connect_error', () => {
     addMessage('status', null, 'Tentando reconectar...')
 })
 
-// join-request para reconexão
-if (isConnected) {
-    socket.on('connect', () => {
-        if(username !== '') {
-            socket.emit('join-request', username)
-        }
-    })
-}
+
 
