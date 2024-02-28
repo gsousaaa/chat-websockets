@@ -9,7 +9,7 @@ let isConnected = false
 
 function renderUserList(users) {
     let ul = document.querySelector('.userList')
-    ul.innerHTML = ''
+    ul.innerHTML = '<span>Usuários conectados:</span>'
 
     users.forEach(i => {
         ul.innerHTML += '<li>'+i+'</li>'
@@ -94,6 +94,7 @@ socket.on('connect_error', () => {
     addMessage('status', null, 'Tentando reconectar...')
 })
 
+// join-request para reconexão
 if (isConnected) {
     socket.on('connect', () => {
         if(username !== '') {
