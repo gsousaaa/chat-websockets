@@ -10,7 +10,7 @@ joinChatButton.addEventListener('click', (e)=> {
     }
 
     let username = loginNameInput.value
-    localStorage.setItem('username', username)
+    sessionStorage.setItem('username', username)
    
     window.location.href= '/chat.html'
 })

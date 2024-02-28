@@ -17,14 +17,23 @@ function renderUserList(users) {
 }
 
 window.addEventListener('load', () => {
-     const username = localStorage.getItem('username')
-     document.title = `Chat (${username})`
-     socket.emit('join-request', username)
-})
+    const username = sessionStorage.getItem('username');
+    if (username) {
+        document.title = `Chat (${username})`;
+        socket.emit('join-request', username);
+    }
+});
 
-socket.on('user-on', (list) => {
+
+socket.on('user-ok', (list) => {
     userList = list
     renderUserList(userList)
+})
+
+socket.on('list-update', (data) => {
+    userList = data.list
+    renderUserList(userList)
+
 })
 
 
