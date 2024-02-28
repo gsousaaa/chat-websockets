@@ -36,8 +36,14 @@ io.on('connection', (socket) => {
             socket.username = username;
             connectedUsers.push(username);
         }
+
         console.log(connectedUsers);
-        socket.emit('user-on', connectedUsers);
+        socket.emit('user-ok', connectedUsers);
+        
+        socket.broadcast.emit('list-update', {
+            joined: username,
+            list: connectedUsers
+        })
     })
 })
 
