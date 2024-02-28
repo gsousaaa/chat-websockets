@@ -24,7 +24,7 @@ server.listen(process.env.PORT, () => {
     console.log(`server rodando na porta ${process.env.PORT}`)
 })
 
-let connectedUsers: Socket[] = []
+let connectedUsers: string[] = []
 
 io.on('connection', (socket) => {
     console.log('Conexão detectada')
@@ -44,6 +44,16 @@ io.on('connection', (socket) => {
             joined: username,
             list: connectedUsers
         })
+    })
+
+    socket.on('disconnect', () => {
+        connectedUsers = connectedUsers.filter(u => u != socket.username)
+        console.log(connectedUsers)
+
+        socket.broadcast.emit('list-update',{
+            left: socket.username,
+            list: connectedUsers
+        } )
     })
 })
 
