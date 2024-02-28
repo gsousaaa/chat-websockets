@@ -30,6 +30,14 @@ ul, li {
     width: 100%;
     max-width: 400px;
 }
+
+#joinChatButton {
+    display: flex;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
 #chat {
     display: flex;
 }
@@ -94,4 +102,5 @@ ul, li {
     border: 0;
     background-color: #ccc;
 }
+
 

@@ -1,6 +1,7 @@
 const socket = io();
 const chatPage = document.getElementById('chat')
 const chatArea = document.querySelector('.chatArea')
+const textInput = document.getElementById('chatTextInput')
 
 
 let userList = []
@@ -24,7 +25,7 @@ function addMessage(type, user, msg) {
             ul.innerHTML += `<li class="m-status">${msg}</li>`
         break; 
         case 'msg': 
-             ul.innerHTML += `<li class="m-status"><span>${user}</span> ${msg}</li>`
+             ul.innerHTML += `<li class="m-txt"><span>${user}</span> ${msg}</li>`
         break;
     }
 
@@ -32,12 +33,26 @@ function addMessage(type, user, msg) {
 
 window.addEventListener('load', () => {
     const username = sessionStorage.getItem('username');
+
     if (username) {
         document.title = `Chat (${username})`;
         socket.emit('join-request', username);
     }
 });
 
+textInput.addEventListener('keyup', (e) => {
+    const username = sessionStorage.getItem('username');
+    
+    if(e.key === 'Enter') {
+        let txt = textInput.value
+    textInput.value = ''
+
+    if(txt != '') {
+        addMessage('msg', username, txt)
+        socket.emit('send-msg', txt)
+    }
+    }
+})
 
 socket.on('user-ok', (list) => {
     addMessage('status', null, 'Conectado!')
@@ -60,4 +75,7 @@ socket.on('list-update', (data) => {
 
 })
 
+socket.on('show-msg', (data) => {
+    addMessage('msg', data.username, data.message)
+})
 
