@@ -41,14 +41,11 @@ window.addEventListener('load', () => {
 });
 
 textInput.addEventListener('keyup', (e) => {
-    const username = sessionStorage.getItem('username');
-    
     if(e.key === 'Enter') {
         let txt = textInput.value
     textInput.value = ''
 
     if(txt != '') {
-        addMessage('msg', username, txt)
         socket.emit('send-msg', txt)
     }
     }

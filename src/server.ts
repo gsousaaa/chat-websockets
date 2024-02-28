@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
             username: socket.username,
             message: txt
         }
-        
+        socket.emit('show-msg', obj)
         socket.broadcast.emit('show-msg', obj)
     })
 })
