@@ -3,8 +3,9 @@ const chatPage = document.getElementById('chat')
 const chatArea = document.querySelector('.chatArea')
 const textInput = document.getElementById('chatTextInput')
 
-
 let userList = []
+let username = sessionStorage.getItem('username');
+let isConnected = false
 
 function renderUserList(users) {
     let ul = document.querySelector('.userList')
@@ -18,6 +19,7 @@ function renderUserList(users) {
 }
 
 function addMessage(type, user, msg) {
+    
     let ul = document.querySelector('.chatList')
    
     switch(type) {
@@ -25,15 +27,19 @@ function addMessage(type, user, msg) {
             ul.innerHTML += `<li class="m-status">${msg}</li>`
         break; 
         case 'msg': 
-             ul.innerHTML += `<li class="m-txt"><span>${user}</span> ${msg}</li>`
+            if(username == user) {
+                ul.innerHTML += `<li class="m-txt"><span class="me">${user}</span> ${msg}</li>`
+            } else {
+                ul.innerHTML += `<li class="m-txt"><span>${user}</span> ${msg}</li>`
+            }
+            
         break;
     }
-
+   
+    ul.scrollTop = ul.scrollHeight
 }
 
 window.addEventListener('load', () => {
-    const username = sessionStorage.getItem('username');
-
     if (username) {
         document.title = `Chat (${username})`;
         socket.emit('join-request', username);
@@ -41,17 +47,18 @@ window.addEventListener('load', () => {
 });
 
 textInput.addEventListener('keyup', (e) => {
-    if(e.key === 'Enter') {
+    if( isConnected && e.key === 'Enter') {
         let txt = textInput.value
     textInput.value = ''
 
-    if(txt != '') {
-        socket.emit('send-msg', txt)
-    }
+        if(txt != '') {
+            socket.emit('send-msg', txt)
+        }
     }
 })
 
 socket.on('user-ok', (list) => {
+    isConnected = true
     addMessage('status', null, 'Conectado!')
 
     userList = list
@@ -75,4 +82,23 @@ socket.on('list-update', (data) => {
 socket.on('show-msg', (data) => {
     addMessage('msg', data.username, data.message)
 })
+
+socket.on('disconnect', () => {
+    addMessage('status', null, 'Você foi desconectado!')
+    userList = []
+    renderUserList(userList)
+    isConnected = false
+})
+
+socket.on('connect_error', () => {
+    addMessage('status', null, 'Tentando reconectar...')
+})
+
+if (isConnected) {
+    socket.on('connect', () => {
+        if(username !== '') {
+            socket.emit('join-request', username)
+        }
+    })
+}
 
